@@ -2,7 +2,7 @@ name: salva-bot
 
 services:
   n8n:
-    image: n8nio/n8n:stable
+    image: n8nio/n8n:2.44.5@sha256:bcb4e4917141f4a5249c8eadf2776d347f4c2ede75adfbbc82064826af9a8ead
     container_name: salva_n8n
     restart: unless-stopped
     ports:
@@ -26,7 +26,7 @@ services:
         condition: service_healthy
 
   postgres:
-    image: postgres:17
+    image: postgres:17.11@sha256:a63c1ea3f6a3a5a1621f97d2aba3b30faecfab4224c1b0000cc85ced57bb1939
     container_name: salva_postgres
     restart: unless-stopped
     environment:
@@ -43,7 +43,7 @@ services:
       retries: 10
 
   inventory-api:
-    image: postgrest/postgrest:latest
+    image: postgrest/postgrest:v16.5@sha256:1347d7552b88f17832912c06afbf7c43209af6eeeb60834b04aae12c9bd9d5cc
     container_name: salva_inventory_api
     restart: unless-stopped
     environment:
@@ -57,7 +57,7 @@ services:
         condition: service_healthy
 
   qdrant:
-    image: qdrant/qdrant:latest
+    image: qdrant/qdrant:v1.19.2@sha256:b7b0444c4c351c970b98e90a6f89c2ee4287c65b44e52b4cb503fa5b2aa927ad
     container_name: salva_qdrant
     restart: unless-stopped
     ports:

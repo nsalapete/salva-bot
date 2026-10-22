@@ -1,0 +1,7 @@
+# Secrets
+.env
+# Volume archives and database dumps (contain credentials and client data)
+*.tgz
+*.tar.gz
+backups/
+db/*backup*.sql

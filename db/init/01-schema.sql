@@ -1,7 +1,41 @@
--- Step 13: atomic stock reservation
-ALTER TABLE requests
-  ADD COLUMN reserved_sku TEXT,
-  ADD COLUMN reserved_bottles INTEGER;
+-- Salva Import bot: complete database schema.
+-- Runs automatically the first time PostgreSQL starts with an empty volume.
+-- The API roles are created by 02-api-roles.sh, because their password comes from .env.
+
+-- Every incoming client message, with what the AI understood and what happened next
+CREATE TABLE requests (
+  id               SERIAL PRIMARY KEY,
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
+  chat_id          BIGINT      NOT NULL,          -- Telegram IDs exceed a 32-bit integer
+  client_name      TEXT,
+  message          TEXT        NOT NULL,
+  intent           TEXT        NOT NULL,          -- order | inquiry | other
+  product          TEXT,
+  quantity         NUMERIC,
+  unit             TEXT,                          -- case | bottle
+  language         TEXT,                          -- en | fr | es
+  status           TEXT        NOT NULL DEFAULT 'received',
+  bot_reply        TEXT,                          -- what the bot answered
+  follow_up_of     INTEGER REFERENCES requests(id), -- answer to a clarifying question
+  reserved_sku     TEXT,
+  reserved_bottles INTEGER,
+  human_last_at    TIMESTAMPTZ                    -- last activity while a salesperson is in charge
+);
+
+-- Product catalogue and live stock, served by the inventory API (PostgREST)
+CREATE TABLE products (
+  sku              TEXT PRIMARY KEY,
+  name             TEXT    NOT NULL,
+  category         TEXT    NOT NULL,
+  bottle_ml        INTEGER NOT NULL,
+  bottles_per_case INTEGER NOT NULL,
+  price_per_case   NUMERIC(10,2) NOT NULL,
+  stock_bottles    INTEGER NOT NULL DEFAULT 0
+);
+
+INSERT INTO products VALUES
+  ('AGU-CUM-700',  'Cumbé Premium Aguardiente', 'aguardiente',  700, 6, 135.00, 210),
+  ('AGU-CUM-1000', 'Cumbé Premium Aguardiente', 'aguardiente', 1000, 6, 153.00, 510);
 
 -- Reserve bottles for a request, atomically and only once per request.
 -- Called by the workflow through the inventory API: POST /rpc/reserve_stock
@@ -39,7 +73,6 @@ END;
 $$;
 
 REVOKE EXECUTE ON FUNCTION reserve_stock(integer, text, integer) FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION reserve_stock(integer, text, integer) TO web_anon;
 
 -- Give the bottles back when the sales team cancels an order (run by hand, not exposed to the API)
 CREATE OR REPLACE FUNCTION cancel_order(p_request_id integer)
@@ -61,6 +94,3 @@ END;
 $$;
 
 REVOKE EXECUTE ON FUNCTION cancel_order(integer) FROM PUBLIC;
-
--- Tell the inventory API to pick up the new function
-NOTIFY pgrst, 'reload schema';

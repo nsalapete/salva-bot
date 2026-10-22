@@ -1,0 +1,188 @@
+{
+  "updatedAt": "2026-10-15T12:32:25.851Z",
+  "createdAt": "2026-10-15T12:23:41.611Z",
+  "id": "ZLdqXtExRfWCDUp0",
+  "name": "Salva - Load knowledge",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "38816688-67e7-477a-828d-34216e367410",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e0a58d39-7585-4f8c-83df-864d039d09c2",
+              "name": "text",
+              "value": "=# Salva Import — product knowledge\n\n## About Salva Import\nSalva Import imports premium Colombian spirits and sells them to bars, restaurants and shops.\n\n## Cumbé Aguardiente — overview\nCumbé (also called Cumbé Premium Aguardiente) is a Colombian aguardiente (\"guaro\"), a contemporary take on the traditional style. It is 29% ABV. It is made from sugarcane spirit from the Cauca Valley, water from the Nevado del Quindío in the Colombian Andes, and Pimpinella anise. It is distilled in the Colombian highlands, then rests in Colombian oak casks. The recipe was developed by José Fernando Botero, a chemical engineer with experience in Colombian distilleries.\n\n## Cumbé — tasting notes\nPimpinella anise is the main character, with floral notes, a slightly woody touch from the oak, and a lively finish.\n\n## Cumbé — how to serve\nTraditionally, aguardiente is sipped neat, at room temperature, in small portions called \"tragos\". Cumbé is also an excellent cocktail base: the four official recipes are below. Quantities are for one glass; multiply them for more glasses.\n\n## Official cocktail — Guaro Sour (citrus, signature)\nIngredients: 50 ml Cumbé, 25 ml fresh lime juice, 20 ml cane sugar syrup, 1 egg white, 2 dashes Angostura bitters (optional).\nGlass: chilled coupe.\nMethod: shake everything except the bitters without ice for about 15 seconds (dry shake) to build the foam, then add ice and shake again until cold. Double-strain into the chilled coupe and finish with the bitters if you like. Result: a silky, lightly foamy sour.\n\n## Official cocktail — Feliz Endings (fruity, long drink)\nIngredients: 40 ml Cumbé, 60 ml pineapple juice, 15 ml fresh lime juice, 40 ml sparkling water.\nGlass: large glass with fresh ice.\nMethod: shake Cumbé, pineapple juice and lime with ice, strain over fresh ice, top with the sparkling water and stir gently.\n\n## Official cocktail — Pimpinella (herbal, signature)\nIngredients: 40 ml Cumbé, 20 ml fresh lime juice, 15 ml cane sugar syrup, 4 basil leaves.\nGlass: chilled coupe. Garnish: one small basil leaf.\nMethod: gently press the basil with the syrup in the shaker to release its aroma, add Cumbé, lime and ice, shake hard, then double-strain into the chilled coupe.\n\n## Official cocktail — Carajillo (coffee, intense)\nIngredients: 40 ml Cumbé, 40 ml espresso (cooled), 10 ml cane sugar syrup.\nGlass: glass with fresh ice.\nMethod: brew an espresso and let it cool, then shake it hard with Cumbé, syrup and ice to create a fine foam. Strain over fresh ice, keeping the foam on top.\n\n## Formats and ordering\nCumbé comes in two bottle sizes, 70 cl and 1 L, both sold by cases of 6 bottles. To order, clients simply send a message such as \"3 cases of Cumbé 1L\" and the assistant checks live stock automatically. Prices and availability are confirmed at order time.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "0016cbe6-ad23-4292-9746-ceb6cc01f68a",
+      "name": "Knowledge text"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        496,
+        208
+      ],
+      "id": "b0dd4d5c-83a8-446b-894d-f81b1f148167",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "jLj0B33uzgWlHQ0P",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        208
+      ],
+      "id": "f32c8aaf-3f04-42bd-9d2b-1a79d242884c",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "salva_products",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "8a902fb7-61db-4823-980d-1ddea1315b62",
+      "name": "salva_products",
+      "credentials": {
+        "qdrantApi": {
+          "id": "6kwKVzNbTxCCU7bS",
+          "name": "Qdrant account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Knowledge text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Knowledge text": {
+      "main": [
+        [
+          {
+            "node": "salva_products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "salva_products",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "salva_products",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "08cd76bd-90ea-45f8-a915-7798e38a6969",
+  "activeVersionId": null,
+  "versionCounter": 23,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-10-15T12:23:41.616Z",
+      "createdAt": "2026-10-15T12:23:41.616Z",
+      "role": "workflow:owner",
+      "workflowId": "ZLdqXtExRfWCDUp0",
+      "projectId": "KbLfbR65dFOuK7ZO",
+      "project": {
+        "updatedAt": "2026-10-13T14:23:01.469Z",
+        "createdAt": "2026-10-13T14:08:45.249Z",
+        "id": "KbLfbR65dFOuK7ZO",
+        "name": "Nicolas Salapete <nsalapete@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "cd530e39-b7db-46c7-b158-2180f89328d0"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

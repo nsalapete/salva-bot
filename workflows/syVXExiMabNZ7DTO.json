@@ -1,0 +1,96 @@
+{
+  "updatedAt": "2026-10-13T14:26:20.197Z",
+  "createdAt": "2026-10-13T14:24:59.133Z",
+  "id": "syVXExiMabNZ7DTO",
+  "name": "My workflow",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f692b2fd-5e7e-4ce8-93fd-06a123592243",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1aba65dd-3ea6-441e-b0c2-01fbead684d0",
+              "name": "message",
+              "value": "Hello Salva",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "70c345c9-90de-476c-bd46-25ebef37bef1",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": null,
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "57bfe54d-0477-4167-8094-32d40ae7351e",
+  "activeVersionId": null,
+  "versionCounter": 5,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-10-13T14:24:59.142Z",
+      "createdAt": "2026-10-13T14:24:59.142Z",
+      "role": "workflow:owner",
+      "workflowId": "syVXExiMabNZ7DTO",
+      "projectId": "KbLfbR65dFOuK7ZO",
+      "project": {
+        "updatedAt": "2026-10-13T14:23:01.469Z",
+        "createdAt": "2026-10-13T14:08:45.249Z",
+        "id": "KbLfbR65dFOuK7ZO",
+        "name": "Nicolas Salapete <nsalapete@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "cd530e39-b7db-46c7-b158-2180f89328d0"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

@@ -1,0 +1,255 @@
+{
+  "updatedAt": "2026-10-15T13:23:05.724Z",
+  "createdAt": "2026-10-15T12:34:38.764Z",
+  "id": "BRmQKfskKHb0Upxl",
+  "name": "Salva - Product knowledge",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "question"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "19d6d456-7150-4abe-bc76-e664c94d223d",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.question }}",
+        "options": {
+          "systemPromptTemplate": "You are the product expert of Salva Import, an importer of premium Colombian spirits that sells to bars and restaurants.\nAnswer the client's question using only the information below. Be concise (3 to 5 sentences), friendly and professional.\nAnswer in the same language as the question.\nIf the information is not below, say you don't have that information and that the sales team will follow up. Never invent facts, prices or stock levels.\nIf the client asks about availability or stock, mention the available formats and invite them to send an order (for example \"3 cases of Cumbé 1L\") so the assistant can check live stock.\n----------------\n{context}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.7,
+      "position": [
+        256,
+        0
+      ],
+      "id": "3a2777c0-95de-437c-ae59-cf6b9987f3ba",
+      "name": "Question and Answer Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-haiku-5-5",
+          "mode": "list",
+          "cachedResultName": "Claude Haiku 5.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.6,
+      "position": [
+        232,
+        232
+      ],
+      "id": "1eb7b579-98d9-4d7f-b789-5a58584fdd9a",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "TJ4dzJKKJZk2miGE",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "typeVersion": 1,
+      "position": [
+        360,
+        232
+      ],
+      "id": "688aa37e-166f-4ac6-ab06-5f98d78b03c7",
+      "name": "Vector Store Retriever"
+    },
+    {
+      "parameters": {
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "salva_products",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [
+        360,
+        440
+      ],
+      "id": "82bb1fc5-b75c-408d-a3d2-5397b871b614",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "6kwKVzNbTxCCU7bS",
+          "name": "Qdrant account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        440,
+        648
+      ],
+      "id": "66192a26-478a-4a92-a706-059a6db1effd",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "jLj0B33uzgWlHQ0P",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e40d8158-0fe8-4426-a26f-490cf2fcddfb",
+              "name": "answer",
+              "value": "={{ $json.response }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        720,
+        0
+      ],
+      "id": "0de79227-33f5-41d0-8fbb-bebf1bfae9de",
+      "name": "Return Answer"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Retriever",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question and Answer Chain": {
+      "main": [
+        [
+          {
+            "node": "Return Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "aa9347bc-85f6-493c-ae6a-69527141f324",
+  "activeVersionId": "4f2a4c72-c702-4f73-a9ae-64a87f1285fd",
+  "versionCounter": 29,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-10-15T12:34:38.767Z",
+      "createdAt": "2026-10-15T12:34:38.767Z",
+      "role": "workflow:owner",
+      "workflowId": "BRmQKfskKHb0Upxl",
+      "projectId": "KbLfbR65dFOuK7ZO",
+      "project": {
+        "updatedAt": "2026-10-13T14:23:01.469Z",
+        "createdAt": "2026-10-13T14:08:45.249Z",
+        "id": "KbLfbR65dFOuK7ZO",
+        "name": "Nicolas Salapete <nsalapete@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "cd530e39-b7db-46c7-b158-2180f89328d0"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

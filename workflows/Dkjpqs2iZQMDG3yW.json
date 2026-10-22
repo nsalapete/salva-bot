@@ -1,0 +1,1892 @@
+{
+  "updatedAt": "2026-10-21T18:59:50.614Z",
+  "createdAt": "2026-10-13T14:42:39.302Z",
+  "id": "Dkjpqs2iZQMDG3yW",
+  "name": "Salva - Main",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -224,
+        320
+      ],
+      "id": "221715c9-2515-487b-90a8-5667e514ca09",
+      "name": "Telegram Trigger",
+      "webhookId": "452c24de-9c9d-4ce1-b121-18680de3779c",
+      "credentials": {
+        "telegramApi": {
+          "id": "a4lUjo30Mq1A7kWZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $('Find pending clarification').item.json.id\n  ? `Earlier message from the client: \"${$('Find pending clarification').item.json.message}\"\nOur question to the client: \"${$('Find pending clarification').item.json.bot_reply}\"\nClient's answer: \"${$('Telegram Trigger').item.json.message.text}\"`\n  : $('Telegram Trigger').item.json.message.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "intent",
+              "description": "Exactly one of: order, inquiry, other. “order” = the client wants to buy, restock or reserve a quantity. “inquiry” = a question about products, availability, prices, tasting notes or cocktails, without a firm request to buy. “other” = greetings, thanks, or anything unrelated.",
+              "required": true
+            },
+            {
+              "name": "product",
+              "description": "The spirit mentioned, as written by the client (e.g. “Aguardiente Premium Cumbé”). Leave empty if none is mentioned."
+            },
+            {
+              "name": "quantity",
+              "type": "number",
+              "description": "How many units the client wants. Only for orders."
+            },
+            {
+              "name": "unit",
+              "description": "“case” or “bottle”. Use “case” for cases, boxes, cartons, caisses or cajas. Only for orders."
+            },
+            {
+              "name": "language",
+              "description": "Two-letter code of the client’s language: en, fr or es.",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are the order assistant of Salva Import, an importer of Colombian spirits (aguardiente, rum, etc.) that sells to bars and restaurants. Extract the requested information from the client's message. Only extract what the client actually wrote: never invent a product or a quantity. If something is not in the message, leave it out.\nSometimes the text contains an earlier message from the client, the question we asked, and the client's answer. In that case, combine them into one complete request (for example: earlier \"I need 4 cases of Cumbé\" + answer \"1L\" = an order of 4 cases of Cumbé 1L). If the client's answer is about something else, extract only the new request."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        80
+      ],
+      "id": "930bcf3b-469e-495a-bfa2-cbbe36966d13",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-haiku-5-5",
+          "mode": "list",
+          "cachedResultName": "Claude Haiku 5.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.6,
+      "position": [
+        968,
+        296
+      ],
+      "id": "434f5397-e2d0-4d4e-8246-504635ec2297",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "TJ4dzJKKJZk2miGE",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7c5b2029-eb29-464a-abf3-c2c22b3c8398",
+              "name": "=chat_id",
+              "value": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "type": "number"
+            },
+            {
+              "id": "9ed96a64-23c0-4382-8e2b-ee1e964ce918",
+              "name": "=client_name",
+              "value": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
+              "type": "string"
+            },
+            {
+              "id": "eda532cf-1433-490f-a932-bcfce5285834",
+              "name": "=message",
+              "value": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "74cc373c-9505-49dd-88c8-5f9e8a6830c6",
+              "name": "=intent",
+              "value": "={{ $json.output.intent }}",
+              "type": "string"
+            },
+            {
+              "id": "519bf056-7e78-4556-89e1-eb476e6986be",
+              "name": "=product",
+              "value": "={{ $json.output.product }} ",
+              "type": "string"
+            },
+            {
+              "id": "45b47d7f-bd6b-4a83-a361-b499f42a9724",
+              "name": "=quantity",
+              "value": "={{ $json.output.quantity }}",
+              "type": "number"
+            },
+            {
+              "id": "7be8679e-ac6f-499c-b7a8-c90563d5faa8",
+              "name": "=unit",
+              "value": "={{ $json.output.unit }}",
+              "type": "string"
+            },
+            {
+              "id": "68e99e59-9326-4baf-b603-7262c3ab3794",
+              "name": "=language",
+              "value": "={{ $json.output.language }}",
+              "type": "string"
+            },
+            {
+              "id": "69325903-6987-4db2-803a-7d87a7c1d12b",
+              "name": "follow_up_of",
+              "value": "={{ $('Find pending clarification').item.json.id ?? null }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1248,
+        176
+      ],
+      "id": "d0f0e05a-5dcf-484b-92c0-cddcf3de8782",
+      "name": "Prepare Data"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "inquiry",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "3b7a1579-f179-43bb-9bc9-501868a82105"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Inquiry"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "fee1bfde-bb36-47f8-8267-875b93368de0",
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "order",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Order"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1696,
+        64
+      ],
+      "id": "bdadf33b-1de3-4d0d-b69b-c93c8c4d0980",
+      "name": "Route by intent"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ (() => {\n  const name = $json.client_name || '';\n  const texts = {\n    fr: `👋 Bonjour ${name} ! Je suis l'assistant de Salva Import.\nVous pouvez :\n• poser une question : « Quel cocktail faire avec le Cumbé ? »\n• passer commande : « 3 caisses de Cumbé 1L »`,\n    es: `👋 ¡Hola ${name}! Soy el asistente de Salva Import.\nPuede:\n• hacer una pregunta: \"¿Qué cóctel puedo preparar con Cumbé?\"\n• hacer un pedido: \"3 cajas de Cumbé 1L\"`,\n    en: `👋 Hello ${name}! I'm the Salva Import assistant.\nYou can:\n• ask a question: \"Which cocktail can I make with Cumbé?\"\n• place an order: \"3 cases of Cumbé 1L\"`,\n  };\n  return texts[$json.language] || texts.en;\n})() }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1920,
+        272
+      ],
+      "id": "aaa499b9-ed16-4587-a119-5c62977f2191",
+      "name": "Reply – Help",
+      "webhookId": "f1b8c78e-acaf-4692-9da2-99de3e647721",
+      "credentials": {
+        "telegramApi": {
+          "id": "a4lUjo30Mq1A7kWZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "requests",
+          "mode": "list",
+          "cachedResultName": "requests"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "product",
+              "displayName": "product",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit",
+              "displayName": "unit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "language",
+              "displayName": "language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1472,
+        176
+      ],
+      "id": "83f06a10-8ffb-4f99-8a78-cd88f1c3200f",
+      "name": "Log Request",
+      "credentials": {
+        "postgres": {
+          "id": "v81pVKeB2BX00n61",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d102758e-e3ee-472b-b91e-a3642762d3ec",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2144,
+        80
+      ],
+      "id": "33454422-98bc-44e0-8afa-2af7c1c9cfa5",
+      "name": "Order Valid ?"
+    },
+    {
+      "parameters": {
+        "url": "http://inventory-api:3000/products",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "sku",
+              "value": "=eq.{{ $json.sku }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.pgrst.object+json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 5000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2368,
+        0
+      ],
+      "id": "86ae46f6-a1bd-4ef1-a51a-68e25f06c0b7",
+      "name": "Check Stock",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c9072b50-45c4-4d55-b9ec-dd1128d69a2d",
+              "leftValue": "={{ $json.stock_bottles }}",
+              "rightValue": "={{ $('Clean order').item.json.quantity * ($('Clean order').item.json.unit === 'case' ? $json.bottles_per_case : 1) }}",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2592,
+        -64
+      ],
+      "id": "09fa3a81-892b-4c7d-99e1-b2b7f4c8186e",
+      "name": "In Stock ?"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Clean order: turns the AI's raw extraction into a validated order matched to a catalog SKU.\n// Input: the row returned by \"Log Request\". Output: a clean order with valid / problem fields.\n\n// Product dictionary. Keep it in sync with the products table (sku, bottle_ml).\nconst CATALOG = [\n  { sku: 'AGU-CUM-700',  label: 'Cumbé Premium Aguardiente 70 cl', keywords: ['cumbe'], ml: 700 },\n  { sku: 'AGU-CUM-1000', label: 'Cumbé Premium Aguardiente 1 L',   keywords: ['cumbe'], ml: 1000 },\n];\nconst RANGE = CATALOG.map((p) => p.label).join(', ');\n\n// Questions sent to the client, per language (fallback: English).\n// Thanks to the conversation memory (Step 12), a short answer is enough.\nconst TEXTS = {\n  en: {\n    units: { case: 'cases', bottle: 'bottles' },\n    or: 'or',\n    unknown: (product) => `Sorry, we don't carry \"${product}\". Our current range: ${RANGE}.`,\n    missing: () => `Which product would you like to order? Our current range: ${RANGE}.`,\n    ambiguous: (options) => `Which one would you like: ${options}? Just reply with the size, e.g. \"1 L\".`,\n    quantity: (units, label) => `How many ${units} of ${label} would you like? Just reply with a number, e.g. \"3\".`,\n  },\n  fr: {\n    units: { case: 'caisses', bottle: 'bouteilles' },\n    or: 'ou',\n    unknown: (product) => `Désolé, nous ne proposons pas « ${product} ». Notre gamme actuelle : ${RANGE}.`,\n    missing: () => `Quel produit souhaitez-vous commander ? Notre gamme actuelle : ${RANGE}.`,\n    ambiguous: (options) => `Lequel souhaitez-vous : ${options} ? Répondez simplement avec le format, par exemple « 1 L ».`,\n    quantity: (units, label) => `Combien de ${units} de ${label} souhaitez-vous ? Répondez simplement avec un nombre, par exemple « 3 ».`,\n  },\n  es: {\n    units: { case: 'cajas', bottle: 'botellas' },\n    or: 'o',\n    unknown: (product) => `Lo sentimos, no tenemos «${product}». Nuestra gama actual: ${RANGE}.`,\n    missing: () => `¿Qué producto desea pedir? Nuestra gama actual: ${RANGE}.`,\n    ambiguous: (options) => `¿Cuál desea: ${options}? Responda simplemente con el formato, por ejemplo «1 L».`,\n    quantity: (units, label) => `¿Cuántas ${units} de ${label} desea? Responda simplemente con un número, por ejemplo «3».`,\n  },\n};\n\n// \"Cumbé 1,5L\" -> \"cumbe 1.5l\": lowercase, no accents, dot decimals\nconst normalize = (text) =>\n  String(text ?? '')\n    .toLowerCase()\n    .normalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/(\\d),(\\d)/g, '$1.$2')\n    .trim();\n\n// Bottle size in ml from \"1L\", \"1 litre\", \"70cl\", \"700 ml\", \"0.7 l\"; null if none\nfunction parseSizeMl(text) {\n  const m = text.match(/(\\d+(?:\\.\\d+)?)\\s*(ml|cl|l|litre|liter|litro)s?\\b/);\n  if (!m) return null;\n  const factor = m[2] === 'ml' ? 1 : m[2] === 'cl' ? 10 : 1000;\n  return Math.round(parseFloat(m[1]) * factor);\n}\n\n// Catalog entries whose keywords all appear in the text\nconst findProducts = (text) =>\n  CATALOG.filter((p) => p.keywords.every((k) => text.includes(k)));\n\nconst row = $json;\nconst t = TEXTS[row.language] || TEXTS.en;\nconst productText = normalize(row.product);\nconst messageText = normalize(row.message);\n\n// 1. Which product? Try the AI's product field first, then the full message\nlet candidates = findProducts(productText);\nif (candidates.length === 0) candidates = findProducts(messageText);\n\n// 2. Which size? Keep only the matching bottle size when the client gave one\nconst size = parseSizeMl(productText) ?? parseSizeMl(messageText);\nconst sized = candidates.filter((p) => p.ml === size);\nif (sized.length > 0) candidates = sized;\n\n// 3. Quantity and unit (Postgres returns NUMERIC as text, e.g. \"3\")\nconst quantity = Number(row.quantity);\nconst unit = row.unit === 'bottle' ? 'bottle' : 'case'; // B2B default: cases\n\n// 4. Anything we must ask the client before checking stock?\nlet problem = null;\nlet problemMessage = null;\nif (candidates.length === 0) {\n  problem = 'unknown_product';\n  problemMessage = row.product ? t.unknown(row.product) : t.missing();\n} else if (candidates.length > 1) {\n  problem = 'ambiguous_product';\n  problemMessage = t.ambiguous(candidates.map((p) => p.label).join(` ${t.or} `));\n} else if (!Number.isInteger(quantity) || quantity <= 0) {\n  problem = 'invalid_quantity';\n  problemMessage = t.quantity(t.units[unit], candidates[0].label);\n}\n\nconst product = candidates.length === 1 ? candidates[0] : null;\n\nreturn {\n  json: {\n    request_id: row.id,\n    chat_id: row.chat_id,\n    client_name: row.client_name,\n    language: row.language,\n    sku: product ? product.sku : null,\n    product_label: product ? product.label : null,\n    quantity: Number.isFinite(quantity) ? quantity : null,\n    unit,\n    valid: problem === null,\n    problem,\n    problem_message: problemMessage,\n  },\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        80
+      ],
+      "id": "c10257c6-dcb3-4a96-a30b-3e40d2ab82f5",
+      "name": "Clean order"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5aa51d9c-c953-497d-8f4a-0374248fe6b8",
+              "name": "request_id",
+              "value": "={{ $('Clean order').item.json.request_id }}",
+              "type": "number"
+            },
+            {
+              "id": "03f067cf-c8c0-4a68-a217-774f1467dab0",
+              "name": "chat_id",
+              "value": "={{ $('Clean order').item.json.chat_id }}",
+              "type": "string"
+            },
+            {
+              "id": "173c4404-a8f4-450d-8d56-6ff777977b85",
+              "name": "status",
+              "value": "confirmed",
+              "type": "string"
+            },
+            {
+              "id": "69ff6706-717a-41e2-b3e2-81221117a734",
+              "name": "reply_text",
+              "value": "={{ (() => {\n  const d = $('Receipt data').item.json;\n  const isCase = d.unit === 'case';\n  const money = (n, locale) => Number(n).toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });\n  const texts = {\n    fr: `🧾 Commande n°${d.order_no} confirmée ✅\n\n📦 ${d.product}\n🔢 ${d.quantity} ${isCase ? 'caisse(s)' : 'bouteille(s)'} (${d.bottles} bouteilles)\n💶 Prix unitaire : ${money(d.unit_price, 'fr-FR')} € HT\n💰 Total : ${money(d.total, 'fr-FR')} € HT\n\nNotre équipe vous contacte rapidement pour organiser la livraison. Merci !`,\n    es: `🧾 Pedido n.º ${d.order_no} confirmado ✅\n\n📦 ${d.product}\n🔢 ${d.quantity} ${isCase ? 'caja(s)' : 'botella(s)'} (${d.bottles} botellas)\n💶 Precio unitario: ${money(d.unit_price, 'es-ES')} € sin IVA\n💰 Total: ${money(d.total, 'es-ES')} € sin IVA\n\nNuestro equipo le contactará pronto para organizar la entrega. ¡Gracias!`,\n    en: `🧾 Order #${d.order_no} confirmed ✅\n\n📦 ${d.product}\n🔢 ${d.quantity} ${isCase ? 'case(s)' : 'bottle(s)'} (${d.bottles} bottles)\n💶 Unit price: €${money(d.unit_price, 'en-GB')} excl. VAT\n💰 Total: €${money(d.total, 'en-GB')} excl. VAT\n\nOur team will contact you shortly to arrange delivery. Thank you!`,\n  };\n  return texts[d.language] || texts.en;\n})() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        3488,
+        -336
+      ],
+      "id": "4442a120-dedf-47df-87b9-3c0af342e960",
+      "name": "Outcome - Confirmed"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5aa51d9c-c953-497d-8f4a-0374248fe6b8",
+              "name": "request_id",
+              "value": "={{ $('Clean order').item.json.request_id }}",
+              "type": "number"
+            },
+            {
+              "id": "03f067cf-c8c0-4a68-a217-774f1467dab0",
+              "name": "chat_id",
+              "value": "={{ $('Clean order').item.json.chat_id }}",
+              "type": "string"
+            },
+            {
+              "id": "173c4404-a8f4-450d-8d56-6ff777977b85",
+              "name": "status",
+              "value": "out_of_stock",
+              "type": "string"
+            },
+            {
+              "id": "69ff6706-717a-41e2-b3e2-81221117a734",
+              "name": "reply_text",
+              "value": "={{ (() => {\n  const label = $('Clean order').item.json.product_label;\n  const bottles = $json.stock_bottles;\n  const cases = Math.floor($json.stock_bottles / $('Check Stock').item.json.bottles_per_case);\n  const texts = {\n    fr: `😕 Désolé, il ne nous reste que ${bottles} bouteilles de ${label} (${cases} caisses complètes). Souhaitez-vous commander une quantité plus petite ?`,\n    es: `😕 Lo sentimos, solo nos quedan ${bottles} botellas de ${label} (${cases} cajas completas). ¿Desea pedir una cantidad menor?`,\n    en: `😕 Sorry, we only have ${bottles} bottles of ${label} left (${cases} full cases). Would you like to order a smaller quantity?`,\n  };\n  return texts[$('Clean order').item.json.language] || texts.en;\n})() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        3488,
+        -144
+      ],
+      "id": "a404ad06-331c-4c43-a650-9d2571427c3a",
+      "name": "Outcome - Out Of Stock"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5aa51d9c-c953-497d-8f4a-0374248fe6b8",
+              "name": "request_id",
+              "value": "={{ $('Clean order').item.json.request_id }}",
+              "type": "number"
+            },
+            {
+              "id": "03f067cf-c8c0-4a68-a217-774f1467dab0",
+              "name": "chat_id",
+              "value": "={{ $('Clean order').item.json.chat_id }}",
+              "type": "string"
+            },
+            {
+              "id": "173c4404-a8f4-450d-8d56-6ff777977b85",
+              "name": "status",
+              "value": "pending_human",
+              "type": "string"
+            },
+            {
+              "id": "69ff6706-717a-41e2-b3e2-81221117a734",
+              "name": "reply_text",
+              "value": "={{ (() => {\n  const texts = {\n    fr: `⏳ Notre système est momentanément occupé. Un membre de l'équipe va confirmer votre commande très rapidement.`,\n    es: `⏳ Nuestro sistema está ocupado. Una persona de nuestro equipo confirmará su pedido en breve.`,\n    en: `⏳ Our system is busy, a human will confirm your order shortly.`,\n  };\n  return texts[$('Clean order').item.json.language] || texts.en;\n})() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        3488,
+        112
+      ],
+      "id": "13d0fd72-b2da-46fa-8067-0d981f5b9a63",
+      "name": "Outcome - Pending Human"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5aa51d9c-c953-497d-8f4a-0374248fe6b8",
+              "name": "request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "number"
+            },
+            {
+              "id": "03f067cf-c8c0-4a68-a217-774f1467dab0",
+              "name": "chat_id",
+              "value": "={{ $json.chat_id }}",
+              "type": "string"
+            },
+            {
+              "id": "173c4404-a8f4-450d-8d56-6ff777977b85",
+              "name": "status",
+              "value": "needs_clarification",
+              "type": "string"
+            },
+            {
+              "id": "69ff6706-717a-41e2-b3e2-81221117a734",
+              "name": "reply_text",
+              "value": "={{ $json.problem_message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        3488,
+        416
+      ],
+      "id": "41f629e3-28b9-404c-91bb-4fea6145fa3d",
+      "name": "Outcome - Needs Clarification"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE requests\nSET status = $1, bot_reply = $3\nWHERE id = $2\nRETURNING id, chat_id, status, bot_reply AS reply_text, client_name, message, product, quantity, unit;",
+        "options": {
+          "queryReplacement": "={{ [ $json.status, $json.request_id, $json.reply_text ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        3712,
+        -16
+      ],
+      "id": "63826c40-89f2-4940-b5d2-15a85f1df4f8",
+      "name": "Save Status",
+      "credentials": {
+        "postgres": {
+          "id": "v81pVKeB2BX00n61",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.reply_text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3936,
+        -112
+      ],
+      "id": "56d53989-d8fd-45d5-a1cb-68a9bb84ea58",
+      "name": "Send Reply",
+      "webhookId": "3a20da61-21ee-496d-8b18-4cefd148fd85",
+      "credentials": {
+        "telegramApi": {
+          "id": "a4lUjo30Mq1A7kWZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "BRmQKfskKHb0Upxl",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/BRmQKfskKHb0Upxl",
+          "cachedResultName": "Salva - Product knowledge"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "question": "={{ $json.message }}"
+          },
+          "matchingColumns": [
+            "question"
+          ],
+          "schema": [
+            {
+              "id": "question",
+              "displayName": "question",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        3264,
+        -528
+      ],
+      "id": "c9fcb845-8d29-4b7b-bbbc-1b6b27ff7555",
+      "name": "ask product knowledge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5ce48120-0ade-454f-8b73-f65e13325ac0",
+              "name": "=request_id",
+              "value": "={{ $('Log Request').first().json.id }}",
+              "type": "number"
+            },
+            {
+              "id": "c0e95a20-7ab1-498b-995b-7af0fb9ac88c",
+              "name": "=chat_id",
+              "value": "={{ $('Log Request').first().json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "379038b6-2823-4a99-9f28-a86b66714c0e",
+              "name": "status",
+              "value": "answered",
+              "type": "string"
+            },
+            {
+              "id": "e7dcfcf8-05e1-4799-8b89-f207c51c8dfb",
+              "name": "reply_text",
+              "value": "={{ $json.answer }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        3488,
+        -528
+      ],
+      "id": "509bdb7e-089b-4aba-ab58-ec11b81d92a8",
+      "name": "Outcome - Answered"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "63ab42ac-1dfc-4977-af65-359208e75316",
+              "name": "order_no",
+              "value": "={{ $('Clean order').item.json.request_id }}",
+              "type": "number"
+            },
+            {
+              "id": "08be5318-c9bf-4355-8218-6ec240905e9b",
+              "name": "product",
+              "value": "={{ $('Clean order').item.json.product_label }}",
+              "type": "string"
+            },
+            {
+              "id": "3b811a57-5ced-40a6-a5ab-d3741fc00047",
+              "name": "quantity",
+              "value": "={{ $('Clean order').item.json.quantity }}",
+              "type": "number"
+            },
+            {
+              "id": "8a16da8a-06b0-4a3e-8afd-3871f3521d23",
+              "name": "unit",
+              "value": "={{ $('Clean order').item.json.unit }}",
+              "type": "string"
+            },
+            {
+              "id": "ab7fac5a-74b6-4ec6-a62d-e228553ada27",
+              "name": "bottles",
+              "value": "={{ $('Clean order').item.json.quantity * ($('Clean order').item.json.unit === 'case' ? $json.bottles_per_case : 1) }}",
+              "type": "number"
+            },
+            {
+              "id": "24854544-c44a-4397-a27a-e0be05fef5f9",
+              "name": "unit_price",
+              "value": "={{ $('Clean order').item.json.unit === 'case' ? $json.price_per_case : $json.price_per_case / $json.bottles_per_case }}",
+              "type": "number"
+            },
+            {
+              "id": "7c5c50fc-3105-4b02-a8b3-8578205307a9",
+              "name": "total",
+              "value": "={{ $('Clean order').item.json.quantity * ($('Clean order').item.json.unit === 'case' ? $json.price_per_case : $json.price_per_case / $json.bottles_per_case) }}",
+              "type": "number"
+            },
+            {
+              "id": "d489efd0-2fb5-4466-bd60-eea4004ff951",
+              "name": "language",
+              "value": "={{ $('Clean order').item.json.language }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2816,
+        -144
+      ],
+      "id": "8e21c608-b62c-482a-a9dd-fe79d16e252a",
+      "name": "Receipt data"
+    },
+    {
+      "parameters": {
+        "content": "## Reception & AI understanding",
+        "height": 800,
+        "width": 2040
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -32
+      ],
+      "id": "aa3c2744-6a6f-49b7-85d9-e1f4cb7ec16a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Inquiry path: Ask product knowledge",
+        "height": 256,
+        "width": 480,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3184,
+        -624
+      ],
+      "id": "5f6071c3-a04c-4c66-90a7-782f81b41439",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Order path",
+        "height": 472,
+        "width": 1320,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1872,
+        -240
+      ],
+      "id": "eab6e6dc-c87d-4354-97a6-40c1c5b209a0",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Outcomes, state & reply",
+        "height": 1120,
+        "width": 3608,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        656,
+        -352
+      ],
+      "id": "02e37a50-d5c5-4172-a817-da76447cf675",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE requests\nSET status = 'clarified'\nWHERE id = $1 AND status = 'needs_clarification';",
+        "options": {
+          "queryReplacement": "={{ [ $json.follow_up_of ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1696,
+        288
+      ],
+      "id": "b6d71552-2843-4a7b-aec8-cdf654cb01d8",
+      "name": "Close pending Clarification",
+      "credentials": {
+        "postgres": {
+          "id": "v81pVKeB2BX00n61",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, message, bot_reply\nFROM requests\nWHERE chat_id = $1\n  AND status = 'needs_clarification'\n  AND created_at > now() - interval '30 minutes'\nORDER BY id DESC\nLIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ [ $('Telegram Trigger').item.json.message.chat.id ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        672,
+        176
+      ],
+      "id": "c9d4aec3-958b-4ecc-b6c9-6452320e33f5",
+      "name": "Find pending clarification",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "v81pVKeB2BX00n61",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://inventory-api:3000/rpc/reserve_stock",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"p_request_id\": {{ $('Clean order').item.json.request_id }},\n  \"p_sku\": \"{{ $('Clean order').item.json.sku }}\",\n  \"p_bottles\": {{ $json.bottles }}\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 5000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        3040,
+        -144
+      ],
+      "id": "7cf1e74c-9f51-4b0f-bb97-4f8a1309fecb",
+      "name": "Reserve stock",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "bb1d331d-f605-4be8-90ea-de7d6762521b",
+              "leftValue": "={{ $json.reserved }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        3264,
+        -240
+      ],
+      "id": "5f6de828-2b99-4c75-a79f-0464ab9609e3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.chat.type }}",
+                    "rightValue": "private",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "55101efe-19cb-402a-9dbf-4c7f15f0dc39"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Client"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "2b332338-513f-49df-8862-ef869e7b9469",
+                    "leftValue": "={{ $json.message.chat.type !== 'private' && ($json.message.reply_to_message?.text ?? '').includes('Request #') && $json.message.chat.id == '-5114445178'}}",
+                    "rightValue": "private",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Sales team"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.5,
+      "position": [
+        0,
+        320
+      ],
+      "id": "a9765b84-5394-4b07-a25a-45716fb32424",
+      "name": "Who is writing ?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "877ea1c8-b8fc-4e67-b21c-1d71dbeea00d",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "pending_human",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        3936,
+        80
+      ],
+      "id": "b969368a-234e-4450-baf3-fd62334a8166",
+      "name": "Needs a human ?"
+    },
+    {
+      "parameters": {
+        "chatId": "-5114445178",
+        "text": "=🚨 Request #{{ $json.id }} needs a human  👤 {{ $json.client_name }} 💬 \"{{ $json.message }}\" 📦 {{ $json.quantity }} {{ $json.unit }} · {{ $json.product }}  The bot could not complete this order (inventory system unavailable). ↩️ Reply to this message to answer the client · reply /done when finished",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        4160,
+        80
+      ],
+      "id": "b391c1b6-a765-4889-b8d9-a9ef06b6fc30",
+      "name": "Alert sales team",
+      "webhookId": "ee2d77f8-18f5-49a9-b633-e9740490e20e",
+      "credentials": {
+        "telegramApi": {
+          "id": "a4lUjo30Mq1A7kWZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE requests\nSET status = 'handled_by_human', human_last_at = now()\nWHERE id = $1\nRETURNING id, chat_id, client_name;",
+        "options": {
+          "queryReplacement": "={{ [ Number(($json.message.reply_to_message.text.match(/#(\\d+)/) || [])[1]) ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        448,
+        672
+      ],
+      "id": "c0114af3-0f84-437f-a751-43961d0a0a7c",
+      "name": "Hand over to human",
+      "credentials": {
+        "postgres": {
+          "id": "v81pVKeB2BX00n61",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "=👤 Salva Import: {{ $('Telegram Trigger').item.json.message.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        672
+      ],
+      "id": "dfc8b209-4595-48f8-ae98-7cf7778c0463",
+      "name": "Send staff answer to client",
+      "webhookId": "d46cfa58-3b48-40f2-af78-60a11dba639b",
+      "credentials": {
+        "telegramApi": {
+          "id": "a4lUjo30Mq1A7kWZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=✅ Sent to {{ $('Hand over to human').item.json.client_name }} (request #{{ $('Hand over to human').item.json.id }})",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        672
+      ],
+      "id": "d97b66c9-fd68-45e4-aedd-6186b115b8a6",
+      "name": "Confirm in group",
+      "webhookId": "2969a26f-e3bb-4bf9-9605-8a33cd61bdc6",
+      "credentials": {
+        "telegramApi": {
+          "id": "a4lUjo30Mq1A7kWZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE requests\nSET human_last_at = now()\nWHERE id = (\n  SELECT id FROM requests\n  WHERE chat_id = $1\n    AND status = 'handled_by_human'\n    AND human_last_at > now() - interval '2 hours'\n  ORDER BY id DESC\n  LIMIT 1\n)\nRETURNING id, client_name;",
+        "options": {
+          "queryReplacement": "={{ [ $json.message.chat.id ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        224,
+        80
+      ],
+      "id": "31b2baea-2214-49a8-856c-d13237505177",
+      "name": "Check handover",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "v81pVKeB2BX00n61",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "4cbf6b4a-d775-4623-88ed-7798146ee0d3",
+              "leftValue": "={{ !!$json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        448,
+        80
+      ],
+      "id": "88af190c-1e45-49ac-b7d6-244c012db518",
+      "name": "With a human ?"
+    },
+    {
+      "parameters": {
+        "chatId": "-5114445178",
+        "text": "=💬 Request #{{ $json.id }} · {{ $json.client_name }}: {{ $('Telegram Trigger').item.json.message.text ?? '(photo or other non-text message)' }}  ↩️ Reply to answer · reply /done to hand back to the bot",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        -16
+      ],
+      "id": "6feaa8da-9512-4d5c-832d-6d3cb7c568a1",
+      "name": "Forward to sales team",
+      "webhookId": "1e56d496-4f66-4b2d-8e7b-08bcc5275808",
+      "credentials": {
+        "telegramApi": {
+          "id": "a4lUjo30Mq1A7kWZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE requests\nSET status = 'resolved_by_human', human_last_at = NULL\nWHERE id = $1\nRETURNING id, chat_id, client_name, language;",
+        "options": {
+          "queryReplacement": "={{ [ Number(($json.message.reply_to_message.text.match(/#(\\d+)/) || [])[1]) ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        448,
+        480
+      ],
+      "id": "76fc563a-46cd-4e20-94b1-e99305abd09d",
+      "name": "Close handover",
+      "credentials": {
+        "postgres": {
+          "id": "v81pVKeB2BX00n61",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ (() => {   const texts = {     fr: `🤖 Merci ! L'assistant Salva Import est de retour : vous pouvez poser vos questions ou commander à tout moment.`,     es: `🤖 ¡Gracias! El asistente de Salva Import está de vuelta: puede hacer preguntas o pedidos en cualquier momento.`,     en: `🤖 Thanks! The Salva Import assistant is back: you can ask questions or order anytime.`,   };   return texts[$json.language] || texts.en; })() }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        480
+      ],
+      "id": "fd64c2d2-137b-4c97-807f-e63ead94ba02",
+      "name": "Tell client the bot is back",
+      "webhookId": "0a48dcb0-569f-444a-941d-a4ca9a41c6a2",
+      "credentials": {
+        "telegramApi": {
+          "id": "a4lUjo30Mq1A7kWZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=✅ Request #{{ $('Close handover').item.json.id }} closed: the bot answers {{ $('Close handover').item.json.client_name }} again.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        480
+      ],
+      "id": "4f85a21b-13c0-4353-b917-2b102eb54d82",
+      "name": "Confirm handback",
+      "webhookId": "b851fd1b-271e-4100-935a-3f951ebca483",
+      "credentials": {
+        "telegramApi": {
+          "id": "a4lUjo30Mq1A7kWZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "e2377582-8fb4-43c2-9a98-ebecf8ac68e2",
+              "leftValue": "={{ ($('Telegram Trigger').item.json.message.text ?? '').trim().startsWith('/done') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        224,
+        576
+      ],
+      "id": "ba4b2752-7893-4bcd-8fff-925258698fdb",
+      "name": "Hand back to bot?"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Who is writing ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Prepare Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Data": {
+      "main": [
+        [
+          {
+            "node": "Log Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by intent": {
+      "main": [
+        [
+          {
+            "node": "ask product knowledge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clean order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply – Help",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Request": {
+      "main": [
+        [
+          {
+            "node": "Route by intent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Close pending Clarification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order Valid ?": {
+      "main": [
+        [
+          {
+            "node": "Check Stock",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Outcome - Needs Clarification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Stock": {
+      "main": [
+        [
+          {
+            "node": "In Stock ?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Outcome - Pending Human",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean order": {
+      "main": [
+        [
+          {
+            "node": "Order Valid ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "In Stock ?": {
+      "main": [
+        [
+          {
+            "node": "Receipt data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Outcome - Out Of Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outcome - Confirmed": {
+      "main": [
+        [
+          {
+            "node": "Save Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outcome - Out Of Stock": {
+      "main": [
+        [
+          {
+            "node": "Save Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outcome - Pending Human": {
+      "main": [
+        [
+          {
+            "node": "Save Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outcome - Needs Clarification": {
+      "main": [
+        [
+          {
+            "node": "Save Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Status": {
+      "main": [
+        [
+          {
+            "node": "Send Reply",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Needs a human ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ask product knowledge": {
+      "main": [
+        [
+          {
+            "node": "Outcome - Answered",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outcome - Answered": {
+      "main": [
+        [
+          {
+            "node": "Save Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Receipt data": {
+      "main": [
+        [
+          {
+            "node": "Reserve stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find pending clarification": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reserve stock": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Outcome - Pending Human",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Outcome - Confirmed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Outcome - Out Of Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Who is writing ?": {
+      "main": [
+        [
+          {
+            "node": "Check handover",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Hand back to bot?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs a human ?": {
+      "main": [
+        [
+          {
+            "node": "Alert sales team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hand over to human": {
+      "main": [
+        [
+          {
+            "node": "Send staff answer to client",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send staff answer to client": {
+      "main": [
+        [
+          {
+            "node": "Confirm in group",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check handover": {
+      "main": [
+        [
+          {
+            "node": "With a human ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "With a human ?": {
+      "main": [
+        [
+          {
+            "node": "Forward to sales team",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Find pending clarification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Close handover": {
+      "main": [
+        [
+          {
+            "node": "Tell client the bot is back",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tell client the bot is back": {
+      "main": [
+        [
+          {
+            "node": "Confirm handback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hand back to bot?": {
+      "main": [
+        [
+          {
+            "node": "Close handover",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Hand over to human",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "1c576bca-d6b2-459f-b78c-e3ff08886090",
+  "activeVersionId": "04388f6c-46dc-4300-ac37-384882e4e534",
+  "versionCounter": 675,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-10-13T14:42:39.324Z",
+      "createdAt": "2026-10-13T14:42:39.324Z",
+      "role": "workflow:owner",
+      "workflowId": "Dkjpqs2iZQMDG3yW",
+      "projectId": "KbLfbR65dFOuK7ZO",
+      "project": {
+        "updatedAt": "2026-10-13T14:23:01.469Z",
+        "createdAt": "2026-10-13T14:08:45.249Z",
+        "id": "KbLfbR65dFOuK7ZO",
+        "name": "Nicolas Salapete <nsalapete@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "cd530e39-b7db-46c7-b158-2180f89328d0"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

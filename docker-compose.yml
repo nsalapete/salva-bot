@@ -1,0 +1,76 @@
+name: salva-bot
+
+services:
+  n8n:
+    image: n8nio/n8n:stable
+    container_name: salva_n8n
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      - GENERIC_TIMEZONE=Europe/Paris
+      - TZ=Europe/Paris
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - N8N_HOST=bot.cumbespirits.fr
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://bot.cumbespirits.fr/
+      - N8N_PROXY_HOPS=1
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - default
+      - web
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17
+    container_name: salva_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  inventory-api:
+    image: postgrest/postgrest:latest
+    container_name: salva_inventory_api
+    restart: unless-stopped
+    environment:
+      - PGRST_DB_URI=postgres://authenticator:${INVENTORY_API_DB_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - PGRST_DB_SCHEMAS=public
+      - PGRST_DB_ANON_ROLE=web_anon
+    ports:
+      - "127.0.0.1:3001:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: salva_qdrant
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+networks:
+  web:
+    external: true
+    name: cumbespirits_cumbe_network
+
+volumes:
+  n8n_data:
+  postgres_data:
+  qdrant_data:
+

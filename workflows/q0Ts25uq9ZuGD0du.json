@@ -1,0 +1,101 @@
+{
+  "updatedAt": "2026-10-22T12:17:18.396Z",
+  "createdAt": "2026-10-22T11:59:51.647Z",
+  "id": "q0Ts25uq9ZuGD0du",
+  "name": "Salva - Error handler",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "61a2f83b-d1ff-451d-9b1f-60bc9b05a0f9",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "-5114445178",
+        "text": "=⚠️ Workflow error: {{ $json.workflow.name }}\nNode: {{ $json.execution.lastNodeExecuted }}\nError: {{ $json.execution.error.message }}\nExecution: {{ $json.execution.url }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "f9d5e17b-1b16-4f9a-a811-050bae68ad74",
+      "name": "Alert:workflow error",
+      "webhookId": "4855672f-cf56-435e-bf78-d3df98aea0a3",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "telegramApi": {
+          "id": "a4lUjo30Mq1A7kWZ",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Alert:workflow error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "dc04ffe9-5b02-4e4e-9439-91f48db97d32",
+  "activeVersionId": "d59ccb94-d34c-41fb-9496-c672264543eb",
+  "versionCounter": 9,
+  "triggerCount": 0,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-10-22T11:59:51.653Z",
+      "createdAt": "2026-10-22T11:59:51.653Z",
+      "role": "workflow:owner",
+      "workflowId": "q0Ts25uq9ZuGD0du",
+      "projectId": "KbLfbR65dFOuK7ZO",
+      "project": {
+        "updatedAt": "2026-10-13T14:23:01.469Z",
+        "createdAt": "2026-10-13T14:08:45.249Z",
+        "id": "KbLfbR65dFOuK7ZO",
+        "name": "Nicolas Salapete <nsalapete@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "cd530e39-b7db-46c7-b158-2180f89328d0"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

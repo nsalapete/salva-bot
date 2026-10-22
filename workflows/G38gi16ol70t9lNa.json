@@ -1,0 +1,94 @@
+{
+  "updatedAt": "2026-10-22T12:03:52.126Z",
+  "createdAt": "2026-10-22T12:01:50.091Z",
+  "id": "G38gi16ol70t9lNa",
+  "name": "Salva - Error test",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "error-test",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "824d7220-dbc1-42aa-82ee-4074b8c9f284",
+      "name": "Webhook",
+      "webhookId": "a2cca13d-cab5-4bc4-9ac5-0388d62ab78b"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Simulated failure for the demo"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "9b8a67f1-fe77-433f-a004-56337c01831f",
+      "name": "Stop and Error"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "q0Ts25uq9ZuGD0du",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "eff8520e-cac8-461d-b450-0e6ef463618f",
+  "activeVersionId": "eff8520e-cac8-461d-b450-0e6ef463618f",
+  "versionCounter": 7,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-10-22T12:01:50.096Z",
+      "createdAt": "2026-10-22T12:01:50.096Z",
+      "role": "workflow:owner",
+      "workflowId": "G38gi16ol70t9lNa",
+      "projectId": "KbLfbR65dFOuK7ZO",
+      "project": {
+        "updatedAt": "2026-10-13T14:23:01.469Z",
+        "createdAt": "2026-10-13T14:08:45.249Z",
+        "id": "KbLfbR65dFOuK7ZO",
+        "name": "Nicolas Salapete <nsalapete@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "cd530e39-b7db-46c7-b158-2180f89328d0"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": "Version eff8520e",
+    "description": ""
+  }
+}

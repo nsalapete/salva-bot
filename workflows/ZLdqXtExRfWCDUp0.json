@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T12:32:25.851Z",
+  "updatedAt": "2026-10-22T12:16:53.039Z",
   "createdAt": "2026-10-15T12:23:41.611Z",
   "id": "ZLdqXtExRfWCDUp0",
   "name": "Salva - Load knowledge",
@@ -86,7 +86,7 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
       "typeVersion": 1.3,
       "position": [
-        448,
+        480,
         0
       ],
       "id": "8a902fb7-61db-4823-980d-1ddea1315b62",
@@ -147,7 +147,11 @@
   },
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "q0Ts25uq9ZuGD0du",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
   "meta": {
@@ -155,9 +159,9 @@
   },
   "nodeGroups": [],
   "pinData": {},
-  "versionId": "08cd76bd-90ea-45f8-a915-7798e38a6969",
+  "versionId": "32abf8e6-714e-4054-bcfb-0415ba5d1532",
   "activeVersionId": null,
-  "versionCounter": 23,
+  "versionCounter": 25,
   "triggerCount": 0,
   "sourceWorkflowId": null,
   "tags": [],

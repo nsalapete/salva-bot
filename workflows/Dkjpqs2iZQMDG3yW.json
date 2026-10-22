@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-21T18:59:50.614Z",
+  "updatedAt": "2026-10-22T12:21:43.645Z",
   "createdAt": "2026-10-13T14:42:39.302Z",
   "id": "Dkjpqs2iZQMDG3yW",
   "name": "Salva - Main",
@@ -18,7 +18,7 @@
       "typeVersion": 1.5,
       "position": [
         -224,
-        320
+        448
       ],
       "id": "221715c9-2515-487b-90a8-5667e514ca09",
       "name": "Telegram Trigger",
@@ -67,11 +67,14 @@
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "typeVersion": 1.2,
       "position": [
-        896,
-        80
+        1344,
+        224
       ],
       "id": "930bcf3b-469e-495a-bfa2-cbbe36966d13",
-      "name": "Information Extractor"
+      "name": "Information Extractor",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -86,8 +89,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
       "typeVersion": 1.6,
       "position": [
-        968,
-        296
+        1424,
+        464
       ],
       "id": "434f5397-e2d0-4d4e-8246-504635ec2297",
       "name": "Anthropic Chat Model",
@@ -164,7 +167,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        1248,
+        1696,
         176
       ],
       "id": "d0f0e05a-5dcf-484b-92c0-cddcf3de8782",
@@ -233,7 +236,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        1696,
+        2144,
         64
       ],
       "id": "bdadf33b-1de3-4d0d-b69b-c93c8c4d0980",
@@ -250,12 +253,14 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1920,
+        2368,
         272
       ],
       "id": "aaa499b9-ed16-4587-a119-5c62977f2191",
       "name": "Reply – Help",
       "webhookId": "f1b8c78e-acaf-4692-9da2-99de3e647721",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "telegramApi": {
           "id": "a4lUjo30Mq1A7kWZ",
@@ -392,11 +397,13 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        1472,
+        1920,
         176
       ],
       "id": "83f06a10-8ffb-4f99-8a78-cd88f1c3200f",
       "name": "Log Request",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "postgres": {
           "id": "v81pVKeB2BX00n61",
@@ -432,7 +439,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        2144,
+        2592,
         80
       ],
       "id": "33454422-98bc-44e0-8afa-2af7c1c9cfa5",
@@ -471,7 +478,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.5,
       "position": [
-        2368,
+        2816,
         0
       ],
       "id": "86ae46f6-a1bd-4ef1-a51a-68e25f06c0b7",
@@ -507,7 +514,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        2592,
+        3040,
         -64
       ],
       "id": "09fa3a81-892b-4c7d-99e1-b2b7f4c8186e",
@@ -520,7 +527,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1920,
+        2368,
         80
       ],
       "id": "c10257c6-dcb3-4a96-a30b-3e40d2ab82f5",
@@ -561,7 +568,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        3488,
+        3936,
         -336
       ],
       "id": "4442a120-dedf-47df-87b9-3c0af342e960",
@@ -602,7 +609,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        3488,
+        3936,
         -144
       ],
       "id": "a404ad06-331c-4c43-a650-9d2571427c3a",
@@ -643,8 +650,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        3488,
-        112
+        3936,
+        128
       ],
       "id": "13d0fd72-b2da-46fa-8067-0d981f5b9a63",
       "name": "Outcome - Pending Human"
@@ -684,7 +691,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        3488,
+        3936,
         416
       ],
       "id": "41f629e3-28b9-404c-91bb-4fea6145fa3d",
@@ -701,11 +708,13 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        3712,
+        4160,
         -16
       ],
       "id": "63826c40-89f2-4940-b5d2-15a85f1df4f8",
       "name": "Save Status",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "postgres": {
           "id": "v81pVKeB2BX00n61",
@@ -722,12 +731,14 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3936,
+        4384,
         -112
       ],
       "id": "56d53989-d8fd-45d5-a1cb-68a9bb84ea58",
       "name": "Send Reply",
       "webhookId": "3a20da61-21ee-496d-8b18-4cefd148fd85",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "telegramApi": {
           "id": "a4lUjo30Mq1A7kWZ",
@@ -772,11 +783,13 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.4,
       "position": [
-        3264,
+        3712,
         -528
       ],
       "id": "c9fcb845-8d29-4b7b-bbbc-1b6b27ff7555",
-      "name": "ask product knowledge"
+      "name": "ask product knowledge",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000
     },
     {
       "parameters": {
@@ -813,7 +826,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        3488,
+        3936,
         -528
       ],
       "id": "509bdb7e-089b-4aba-ab58-ec11b81d92a8",
@@ -878,7 +891,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        2816,
+        3264,
         -144
       ],
       "id": "8e21c608-b62c-482a-a9dd-fe79d16e252a",
@@ -887,14 +900,14 @@
     {
       "parameters": {
         "content": "## Reception & AI understanding",
-        "height": 800,
-        "width": 2040
+        "height": 908,
+        "width": 2488
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         -240,
-        -32
+        48
       ],
       "id": "aa3c2744-6a6f-49b7-85d9-e1f4cb7ec16a",
       "name": "Sticky Note"
@@ -909,7 +922,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        3184,
+        3632,
         -624
       ],
       "id": "5f6071c3-a04c-4c66-90a7-782f81b41439",
@@ -925,7 +938,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1872,
+        2320,
         -240
       ],
       "id": "eab6e6dc-c87d-4354-97a6-40c1c5b209a0",
@@ -934,14 +947,14 @@
     {
       "parameters": {
         "content": "## Outcomes, state & reply",
-        "height": 1120,
-        "width": 3608,
+        "height": 1308,
+        "width": 3832,
         "color": 6
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        656,
+        880,
         -352
       ],
       "id": "02e37a50-d5c5-4172-a817-da76447cf675",
@@ -958,11 +971,13 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        1696,
+        2144,
         288
       ],
       "id": "b6d71552-2843-4a7b-aec8-cdf654cb01d8",
       "name": "Close pending Clarification",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "postgres": {
           "id": "v81pVKeB2BX00n61",
@@ -981,12 +996,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        672,
-        176
+        1120,
+        224
       ],
       "id": "c9d4aec3-958b-4ecc-b6c9-6452320e33f5",
       "name": "Find pending clarification",
       "alwaysOutputData": true,
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "postgres": {
           "id": "v81pVKeB2BX00n61",
@@ -1013,7 +1030,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.5,
       "position": [
-        3040,
+        3488,
         -144
       ],
       "id": "7cf1e74c-9f51-4b0f-bb97-4f8a1309fecb",
@@ -1050,7 +1067,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.4,
       "position": [
-        3264,
+        3712,
         -240
       ],
       "id": "5f6de828-2b99-4c75-a79f-0464ab9609e3",
@@ -1118,8 +1135,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.5,
       "position": [
-        0,
-        320
+        224,
+        448
       ],
       "id": "a9765b84-5394-4b07-a25a-45716fb32424",
       "name": "Who is writing ?"
@@ -1152,7 +1169,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.4,
       "position": [
-        3936,
+        4384,
         80
       ],
       "id": "b969368a-234e-4450-baf3-fd62334a8166",
@@ -1169,12 +1186,14 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        4160,
+        4608,
         80
       ],
       "id": "b391c1b6-a765-4889-b8d9-a9ef06b6fc30",
       "name": "Alert sales team",
       "webhookId": "ee2d77f8-18f5-49a9-b633-e9740490e20e",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "telegramApi": {
           "id": "a4lUjo30Mq1A7kWZ",
@@ -1193,11 +1212,13 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        448,
-        672
+        672,
+        848
       ],
       "id": "c0114af3-0f84-437f-a751-43961d0a0a7c",
       "name": "Hand over to human",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "postgres": {
           "id": "v81pVKeB2BX00n61",
@@ -1216,12 +1237,14 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        672,
-        672
+        896,
+        848
       ],
       "id": "dfc8b209-4595-48f8-ae98-7cf7778c0463",
       "name": "Send staff answer to client",
       "webhookId": "d46cfa58-3b48-40f2-af78-60a11dba639b",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "telegramApi": {
           "id": "a4lUjo30Mq1A7kWZ",
@@ -1240,12 +1263,14 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        960,
-        672
+        1120,
+        848
       ],
       "id": "d97b66c9-fd68-45e4-aedd-6186b115b8a6",
       "name": "Confirm in group",
       "webhookId": "2969a26f-e3bb-4bf9-9605-8a33cd61bdc6",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "telegramApi": {
           "id": "a4lUjo30Mq1A7kWZ",
@@ -1264,12 +1289,14 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        224,
-        80
+        448,
+        256
       ],
       "id": "31b2baea-2214-49a8-856c-d13237505177",
       "name": "Check handover",
       "alwaysOutputData": true,
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "postgres": {
           "id": "v81pVKeB2BX00n61",
@@ -1305,8 +1332,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.4,
       "position": [
-        448,
-        80
+        672,
+        256
       ],
       "id": "88af190c-1e45-49ac-b7d6-244c012db518",
       "name": "With a human ?"
@@ -1322,12 +1349,14 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        672,
-        -16
+        896,
+        160
       ],
       "id": "6feaa8da-9512-4d5c-832d-6d3cb7c568a1",
       "name": "Forward to sales team",
       "webhookId": "1e56d496-4f66-4b2d-8e7b-08bcc5275808",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "telegramApi": {
           "id": "a4lUjo30Mq1A7kWZ",
@@ -1346,11 +1375,13 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.7,
       "position": [
-        448,
-        480
+        672,
+        656
       ],
       "id": "76fc563a-46cd-4e20-94b1-e99305abd09d",
       "name": "Close handover",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "postgres": {
           "id": "v81pVKeB2BX00n61",
@@ -1367,12 +1398,14 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        672,
-        480
+        896,
+        656
       ],
       "id": "fd64c2d2-137b-4c97-807f-e63ead94ba02",
       "name": "Tell client the bot is back",
       "webhookId": "0a48dcb0-569f-444a-941d-a4ca9a41c6a2",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "telegramApi": {
           "id": "a4lUjo30Mq1A7kWZ",
@@ -1389,12 +1422,14 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        960,
-        480
+        1120,
+        656
       ],
       "id": "4f85a21b-13c0-4353-b917-2b102eb54d82",
       "name": "Confirm handback",
       "webhookId": "b851fd1b-271e-4100-935a-3f951ebca483",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
       "credentials": {
         "telegramApi": {
           "id": "a4lUjo30Mq1A7kWZ",
@@ -1430,11 +1465,86 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.4,
       "position": [
-        224,
-        576
+        448,
+        752
       ],
       "id": "ba4b2752-7893-4bcd-8fff-925258698fdb",
       "name": "Hand back to bot?"
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "={{ $json.update_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        0,
+        448
+      ],
+      "id": "b42bd735-4cef-49fe-957b-710a9228e7fe",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ (() => {   const lang = ($('Telegram Trigger').item.json.message.from.language_code || 'en').slice(0, 2);   const texts = {     fr: `🤔 Désolé, je n'ai pas pu lire ce message. Écrivez-moi en texte : une question sur le Cumbé, ou une commande comme « 3 caisses de Cumbé 1L ».`,     es: `🤔 Lo siento, no pude leer este mensaje. Escríbame un texto: una pregunta sobre Cumbé o un pedido como «3 cajas de Cumbé 1L».`,     en: `🤔 Sorry, I couldn't read that message. Send me text: a question about Cumbé, or an order such as \"3 cases of Cumbé 1L\".`,   };   return texts[lang] || texts.en; })() }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1696,
+        448
+      ],
+      "id": "e7204b0b-4ee7-4b1c-84b1-ba66b7d05eba",
+      "name": "Reply - Usage",
+      "webhookId": "bbca564d-35f8-42f6-892b-b8359c5823a7",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "telegramApi": {
+          "id": "a4lUjo30Mq1A7kWZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "aaa11f52-0a78-4f20-bdaf-9532a0827525",
+              "leftValue": "={{ !!$('Telegram Trigger').item.json.message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        896,
+        352
+      ],
+      "id": "1c192596-4346-4a24-a163-a0ac3c024cef",
+      "name": "Has text?"
     }
   ],
   "connections": {
@@ -1442,7 +1552,7 @@
       "main": [
         [
           {
-            "node": "Who is writing ?",
+            "node": "Remove Duplicates",
             "type": "main",
             "index": 0
           }
@@ -1465,6 +1575,13 @@
         [
           {
             "node": "Prepare Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply - Usage",
             "type": "main",
             "index": 0
           }
@@ -1801,7 +1918,7 @@
         ],
         [
           {
-            "node": "Find pending clarification",
+            "node": "Has text?",
             "type": "main",
             "index": 0
           }
@@ -1847,21 +1964,78 @@
           }
         ]
       ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Who is writing ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has text?": {
+      "main": [
+        [
+          {
+            "node": "Find pending clarification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply - Usage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "q0Ts25uq9ZuGD0du",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "nodeGroups": [],
-  "pinData": {},
-  "versionId": "1c576bca-d6b2-459f-b78c-e3ff08886090",
-  "activeVersionId": "04388f6c-46dc-4300-ac37-384882e4e534",
-  "versionCounter": 675,
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 900000003,
+          "message": {
+            "message_id": 903,
+            "from": {
+              "id": 8933355446,
+              "is_bot": false,
+              "first_name": "Nicolas",
+              "language_code": "fr"
+            },
+            "chat": {
+              "id": 8933355446,
+              "first_name": "Nicolas",
+              "type": "private"
+            },
+            "date": 1792670120,
+            "text": "What does Cumbé taste like?"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "4235795c-cef8-4768-9526-e06058ef2e25",
+  "activeVersionId": "4235795c-cef8-4768-9526-e06058ef2e25",
+  "versionCounter": 737,
   "triggerCount": 1,
   "sourceWorkflowId": null,
   "tags": [],
@@ -1886,7 +2060,7 @@
     }
   ],
   "versionMetadata": {
-    "name": null,
-    "description": null
+    "name": "Version 4235795c",
+    "description": ""
   }
 }
